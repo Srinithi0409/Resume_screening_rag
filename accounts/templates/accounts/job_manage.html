@@ -1,0 +1,389 @@
+<!doctype html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Job Management Dashboard</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/icon?family=Material+Icons"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+      rel="stylesheet"
+    />
+    <script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              primary: "#137fec",
+              "background-light": "#f6f7f8",
+              "background-dark": "#101922",
+            },
+            fontFamily: {
+              display: ["Inter"],
+            },
+            borderRadius: {
+              DEFAULT: "0.25rem",
+              lg: "0.5rem",
+              xl: "0.75rem",
+              full: "9999px",
+            },
+          },
+        },
+      };
+    </script>
+    <style>
+      body {
+        font-family: "Inter", sans-serif;
+      }
+      .custom-scrollbar::-webkit-scrollbar {
+        width: 6px;
+        height: 6px;
+      }
+      .custom-scrollbar::-webkit-scrollbar-track {
+        background: transparent;
+      }
+      .custom-scrollbar::-webkit-scrollbar-thumb {
+        background: #d1d5db;
+        border-radius: 10px;
+      }
+      .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+        background: #9ca3af;
+      }
+    </style>
+  </head>
+  <body
+    class="bg-background-light dark:bg-background-dark font-display text-slate-800 dark:text-slate-100 min-h-screen"
+  >
+    <div class="flex min-h-screen">
+      <!-- Sidebar -->
+      <aside
+        class="w-64 bg-white dark:bg-slate-900 border-r border-slate-200 dark:border-slate-800 fixed inset-y-0 left-0 z-40 hidden lg:flex flex-col"
+      >
+        <!-- Logo -->
+        <div
+          class="h-16 flex items-center gap-3 px-6 border-b border-slate-200 dark:border-slate-800"
+        >
+          <div class="bg-primary p-2 rounded-lg">
+            <span class="material-icons text-white">auto_awesome</span>
+          </div>
+          <span class="font-bold text-lg">AI resume screening</span>
+        </div>
+
+        <!-- Navigation -->
+        <nav class="flex-1 px-4 py-6 space-y-2">
+          <a
+            href="{% url 'job_manage' %}"
+            class="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800"
+          >
+            <span class="material-icons">work</span>
+            Jobs
+          </a>
+          <a
+            href="{% url 'recruiter_jobs_for_applicants' %}"
+            class="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800"
+          >
+            <span class="material-icons">group</span>
+            applicants
+          </a>
+        </nav>
+
+        <!-- Footer -->
+        <div class="px-6 py-4 border-t border-slate-200 dark:border-slate-800">
+          <a
+            class="flex items-center gap-3 px-4 py-3 text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-lg transition-colors"
+            href="{% url 'recruiter_profile' %}"
+          >
+            <span class="material-icons">settings</span>
+            <span>Settings</span>
+          </a>
+          <a
+            href="{% url 'logout' %}"
+            class="w-full flex items-center gap-3 px-4 py-2 rounded-lg text-red-500 hover:bg-red-50"
+          >
+            <span class="material-icons">logout</span>
+            Logout
+          </a>
+        </div>
+      </aside>
+      <!-- Content Wrapper -->
+      <div class="flex-1 lg:ml-64">
+        <header
+          class="sticky top-0 z-30 w-full bg-white/80 dark:bg-background-dark/80 backdrop-blur-md border-b border-slate-200 dark:border-slate-800"
+        >
+          <div
+            class="px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between"
+          >
+            <div class="flex items-center gap-4">
+              <h2 class="text-lg font-semibold">Job Management</h2>
+            </div>
+            <div class="flex items-center gap-4">
+              <a
+                href="{% url 'job_create' %}"
+                class="flex items-center gap-2 bg-primary hover:bg-primary/90 text-white px-4 py-2 rounded-lg font-medium transition-colors shadow-sm"
+              >
+                <span class="material-icons text-sm">add</span>
+                <span>Create New Job</span>
+              </a>
+              <div
+                class="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center border border-primary/20 overflow-hidden"
+              >
+                <img
+                  id="nav_profile_photo"
+                  class="w-10 h-10 rounded-full object-cover"
+                  src="https://i.pravatar.cc/100"
+                />
+              </div>
+            </div>
+          </div>
+        </header>
+        <main class="px-4 sm:px-6 lg:px-8 py-8">
+          <!-- Analytics Section -->
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+            <div
+              class="bg-white dark:bg-slate-900 p-6 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm flex flex-col gap-4"
+            >
+              <div class="flex items-center justify-between">
+                <h3
+                  class="text-slate-500 dark:text-slate-400 text-sm font-medium uppercase tracking-wider"
+                >
+                  Average applicants
+                </h3>
+                <span class="material-icons text-primary">insights</span>
+              </div>
+              <div class="flex items-end gap-3">
+                <span class="text-3xl font-bold text-slate-900 dark:text-white"
+                  >{{ avg_applicants }}</span
+                >
+                <span
+                  class="text-green-500 text-sm font-medium mb-1 flex items-center"
+                >
+                  <span class="material-icons text-xs">arrow_upward</span> 2.3%
+                </span>
+              </div>
+              <div
+                class="w-full bg-slate-100 dark:bg-slate-800 h-2 rounded-full overflow-hidden"
+              >
+                <div class="bg-primary h-full rounded-full w-[78%]"></div>
+              </div>
+            </div>
+            <div
+              class="bg-white dark:bg-slate-900 p-6 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm flex flex-col gap-4"
+            >
+              <div class="flex items-center justify-between">
+                <h3
+                  class="text-slate-500 dark:text-slate-400 text-sm font-medium uppercase tracking-wider"
+                >
+                  Shortlisted vs Rejected
+                </h3>
+                <span class="material-icons text-slate-400"
+                  >compare_arrows</span
+                >
+              </div>
+              <div class="flex items-center gap-4 h-12">
+                <div class="flex-1 flex flex-col gap-1">
+                  <span class="text-xs text-slate-500">Shortlisted</span>
+                  <div class="flex items-baseline gap-2">
+                    <span class="text-xl font-bold">{{ shortlisted }}</span>
+                    <div class="h-4 w-12 bg-primary/20 rounded flex items-end">
+                      <div class="w-full bg-primary h-2/3 rounded-sm"></div>
+                    </div>
+                  </div>
+                </div>
+                <div class="w-px h-full bg-slate-200 dark:bg-slate-800"></div>
+                <div class="flex-1 flex flex-col gap-1">
+                  <span class="text-xs text-slate-500">Rejected</span>
+                  <div class="flex items-baseline gap-2">
+                    <span class="text-xl font-bold">{{ rejected }}</span>
+                    <div
+                      class="h-4 w-12 bg-slate-200 dark:bg-slate-700 rounded flex items-end"
+                    >
+                      <div class="w-full bg-slate-400 h-[80%] rounded-sm"></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div
+              class="bg-white dark:bg-slate-900 p-6 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm flex flex-col gap-4"
+            >
+              <div class="flex items-center justify-between">
+                <h3
+                  class="text-slate-500 dark:text-slate-400 text-sm font-medium uppercase tracking-wider"
+                >
+                  Active Recruiting Funnel
+                </h3>
+                <span class="material-icons text-slate-400">filter_alt</span>
+              </div>
+              <div class="flex items-center justify-between">
+                <div class="text-center px-2">
+                  <p class="text-xs text-slate-500 uppercase">Screening</p>
+                  <p class="text-lg font-bold">{{ screening }}</p>
+                </div>
+                <span class="material-icons text-slate-300">chevron_right</span>
+                <div class="text-center px-2">
+                  <p class="text-xs text-slate-500 uppercase">Interview</p>
+                  <p class="text-lg font-bold">{{ interview }}</p>
+                </div>
+                <span class="material-icons text-slate-300">chevron_right</span>
+                <div class="text-center px-2 text-primary">
+                  <p class="text-xs font-semibold uppercase">Offered</p>
+                  <p class="text-lg font-bold">{{ offered }}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- Job Management Table -->
+          <div
+            class="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden"
+          >
+            <div
+              class="p-6 border-b border-slate-200 dark:border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-4"
+            >
+              <h2 class="text-lg font-semibold">Active Job Listings</h2>
+              <div class="flex items-center gap-3">
+                <button
+                  class="flex items-center gap-2 px-3 py-1.5 text-sm border border-slate-200 dark:border-slate-700 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800"
+                >
+                  <span class="material-icons text-sm">filter_list</span>
+                  <span>Filters</span>
+                </button>
+              </div>
+            </div>
+            <div class="overflow-x-auto custom-scrollbar">
+              <table class="w-full text-left">
+                <thead>
+                  <tr
+                    class="bg-slate-50 dark:bg-slate-800/50 text-slate-500 dark:text-slate-400 text-xs uppercase tracking-wider"
+                  >
+                    <th class="px-6 py-4 font-semibold">Job Title &amp; ID</th>
+                    <th class="px-6 py-4 font-semibold">Department</th>
+                    <th class="px-6 py-4 font-semibold">Type</th>
+                    <th class="px-6 py-4 font-semibold">Status</th>
+                    <th class="px-6 py-4 font-semibold text-center">
+                      Applicants
+                    </th>
+                    <th class="px-6 py-4 font-semibold">Date Posted</th>
+                    <th class="px-6 py-4 font-semibold">Immediate Control</th>
+                    <th class="px-6 py-4 font-semibold text-right">Actions</th>
+                  </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-100 dark:divide-slate-800">
+                  {% for job in jobs %}
+
+                  <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/30">
+                    <td class="px-6 py-4">
+                      <div class="flex flex-col">
+                        <span
+                          class="font-semibold text-slate-900 dark:text-white"
+                        >
+                          {{ job.title }}
+                        </span>
+                        <span class="text-xs text-slate-500">
+                          #JOB-{{ job.id }}
+                        </span>
+                      </div>
+                    </td>
+
+                    <td class="px-6 py-4 text-sm">{{ job.department }}</td>
+
+                    <td class="px-6 py-4 text-sm">
+                      <span class="bg-slate-100 px-2 py-1 rounded text-xs">
+                        {{ job.job_type }}
+                      </span>
+                    </td>
+
+                    <td class="px-6 py-4">
+                      <span class="text-green-600"> {{ job.status }} </span>
+                    </td>
+
+                    <td class="px-6 py-4 text-center">{{ job.applicants }}</td>
+
+                    <td class="px-6 py-4 text-sm text-slate-500">
+                      {{ job.date_posted|date:"M d, Y" }}
+                    </td>
+
+                    <td class="px-6 py-4">
+                      <a
+                        href="{% url 'delete_job' job.id %}"
+                        class="text-red-500 hover:underline"
+                      >
+                        Delete
+                      </a>
+                    </td>
+
+                    <td class="px-6 py-4 text-right">
+                      <a
+                        href="{% url 'edit_job' job.id %}"
+                        class="text-blue-600 hover:underline"
+                      >
+                        Edit
+                      </a>
+                    </td>
+                  </tr>
+
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+            <div
+              class="p-6 border-t border-slate-200 dark:border-slate-800 flex items-center justify-between text-sm text-slate-500"
+            >
+              <p>Showing 1 to 4 of 24 active jobs</p>
+              <div class="flex items-center gap-2">
+                {% if jobs.has_previous %}
+                <a
+                  href="?page={{ jobs.previous_page_number }}"
+                  class="w-8 h-8 flex items-center justify-center border rounded"
+                >
+                  ‹
+                </a>
+                {% endif %} {% for num in jobs.paginator.page_range %}
+
+                <a
+                  href="?page={{ num }}"
+                  class="w-8 h-8 flex items-center justify-center rounded {% if jobs.number == num %} bg-primary text-white {% endif %}"
+                >
+                  {{ num }}
+                </a>
+
+                {% endfor %} {% if jobs.has_next %}
+                <a
+                  href="?page={{ jobs.next_page_number }}"
+                  class="w-8 h-8 flex items-center justify-center border rounded"
+                >
+                  ›
+                </a>
+                {% endif %}
+              </div>
+            </div>
+          </div>
+        </main>
+      </div>
+    </div>
+    <!-- Floating AI Assistant Button -->
+    <button
+      class="fixed bottom-8 right-8 w-14 h-14 bg-primary text-white rounded-full shadow-lg flex items-center justify-center hover:scale-105 transition-transform z-50"
+    >
+      <span class="material-icons">auto_awesome</span>
+    </button>
+    <script>
+      const navPhoto = document.getElementById("nav_profile_photo");
+
+      const savedPhoto = localStorage.getItem("recruiter_photo");
+
+      if (savedPhoto) {
+        navPhoto.src = savedPhoto;
+      }
+    </script>
+  </body>
+</html>

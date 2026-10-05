@@ -1,0 +1,8 @@
+<h2>{{ role|title }} Registration</h2>
+
+<form method="POST">
+    {% csrf_token %}
+    <input type="text" name="username" required><br><br>
+    <input type="password" name="password" required><br><br>
+    <button type="submit">Register</button>
+</form>

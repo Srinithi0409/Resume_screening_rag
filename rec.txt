@@ -1,0 +1,352 @@
+📁 File: student_dashboard.txt
+
+Purpose
+Main landing page after student login.
+
+Design Elements
+
+Welcome message with student name
+
+Profile completion progress bar
+
+Summary cards:
+
+Applied Jobs
+
+Shortlisted Jobs
+
+Interviews
+
+New Job Matches
+
+Recent activity list showing latest actions
+
+User Actions
+
+View job application status
+
+Navigate to resume, jobs, profile pages
+
+📁 File: student_resume.txt
+
+Purpose
+Manage and view student resume.
+
+Design Elements
+
+Resume upload section (drag & drop style)
+
+Uploaded file name display
+
+Resume score indicator (visual only)
+
+Skills shown as tags or labels
+
+User Actions
+
+Upload or replace resume
+
+View resume score and extracted skills
+
+📁 File: student_jobs.txt
+
+Purpose
+Browse and apply for jobs.
+
+Design Elements
+
+Job listing cards with:
+
+Job title
+
+Company name
+
+Location
+
+Experience level
+
+Filter options:
+
+Location
+
+Role
+
+Experience
+
+Apply / Applied status button
+
+User Actions
+
+View job details
+
+Apply for jobs
+
+📁 File: student_applications.txt
+
+Purpose
+Track applied jobs and their status.
+
+Design Elements
+
+Table or card layout
+
+Columns:
+
+Job title
+
+Company
+
+Applied date
+
+Current status
+
+Status labels:
+
+Applied
+
+Shortlisted
+
+Interview
+
+Rejected
+
+User Actions
+
+View application progress
+
+Track interview updates
+
+📁 File: student_interviews.txt
+
+Purpose
+View interview schedules and updates.
+
+Design Elements
+
+Interview cards with:
+
+Job role
+
+Company
+
+Date & time
+
+Interview status
+
+Notification style layout
+
+User Actions
+
+Check interview schedule
+
+View interview messages
+
+📁 File: student_profile.txt
+
+Purpose
+Manage personal and academic information.
+
+Design Elements
+
+Profile sections:
+
+Personal details
+
+Education
+
+Skills
+
+Experience
+
+Editable fields
+
+Save and cancel buttons
+
+User Actions
+
+Edit profile information
+
+Update skills and education
+
+📄 RECRUITER MODULE – TEXT DOCUMENT
+📁 File: recruiter_dashboard.txt
+
+Purpose
+Overview of hiring activity.
+
+Design Elements
+
+Summary cards:
+
+Jobs posted
+
+Total applicants
+
+Shortlisted candidates
+
+Hired candidates
+
+Recent hiring activity list
+
+User Actions
+
+Navigate to job postings and candidates
+
+Monitor hiring progress
+
+📁 File: recruiter_post_job.txt
+
+Purpose
+Create new job postings.
+
+Design Elements
+
+Job posting form:
+
+Job title
+
+Description
+
+Required skills
+
+Location
+
+Experience
+
+Submit button at bottom
+
+User Actions
+
+Post a new job
+
+Edit job details before posting
+
+📁 File: recruiter_jobs.txt
+
+Purpose
+Manage posted jobs.
+
+Design Elements
+
+Job list table:
+
+Job title
+
+Status (Open / Closed)
+
+Number of applicants
+
+Action buttons:
+
+View
+
+Edit
+
+Close job
+
+User Actions
+
+View job performance
+
+Close or edit job posts
+
+📁 File: recruiter_candidates.txt
+
+Purpose
+View and manage candidates.
+
+Design Elements
+
+Candidate list with:
+
+Name
+
+Resume score (visual)
+
+Resume preview section
+
+Action buttons:
+
+Shortlist
+
+Reject
+
+User Actions
+
+Review resumes
+
+Shortlist or reject candidates
+
+📁 File: recruiter_interviews.txt
+
+Purpose
+Schedule and track interviews.
+
+Design Elements
+
+Interview list or calendar view
+
+Interview details:
+
+Candidate name
+
+Job role
+
+Date & time
+
+Status
+
+User Actions
+
+Schedule interviews
+
+Update interview status
+
+📁 File: recruiter_reports.txt
+
+Purpose
+View hiring analytics.
+
+Design Elements
+
+Chart placeholders:
+
+Applications per job
+
+Hiring status overview
+
+Filters by job and date
+
+User Actions
+
+View hiring insights
+
+Analyze recruitment data
+
+📁 File: recruiter_company_profile.txt
+
+Purpose
+Manage company information.
+
+Design Elements
+
+Company details:
+
+Company name
+
+Description
+
+Logo section
+
+Recruiter contact details
+
+User Actions
+
+Update company profile
+
+Edit recruiter information
+
+
+links 
+https://ai-job-portal-vtjm.onrender.com/admin db 
+https://ai-job-portal-vtjm.onrender.com  webiste

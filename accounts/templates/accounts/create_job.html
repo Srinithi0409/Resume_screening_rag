@@ -1,0 +1,927 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Create Job Posting</title>
+
+    <link
+      href="https://fonts.googleapis.com/icon?family=Material+Icons"
+      rel="stylesheet"
+    />
+
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              primary: "#137fec",
+              secondary: "#10B981",
+              light: "#F9FAFB",
+            },
+          },
+        },
+      };
+    </script>
+  </head>
+
+  <body class="bg-light flex min-h-screen font-sans">
+    <!-- SIDEBAR -->
+    <aside class="hidden md:flex flex-col w-64 bg-white border-r">
+      <div class="h-16 flex items-center gap-3 px-6 border-b">
+        <div class="bg-primary p-2 rounded-lg">
+          <span class="material-icons text-white">auto_awesome</span>
+        </div>
+        <span class="font-bold text-lg">Recruiter Hub</span>
+      </div>
+
+      <nav class="flex-1 px-4 py-6 space-y-2">
+        <a
+          href="{% url 'job_manage' %}"
+          class="flex items-center gap-3 px-4 py-2 hover:bg-slate-100 rounded-lg"
+        >
+          <span class="material-icons">work</span> Jobs
+        </a>
+
+        <a
+          href="{% url 'job_create' %}"
+          class="flex items-center gap-3 px-4 py-2 hover:bg-slate-100 rounded-lg"
+        >
+          <span class="material-icons">add_circle</span> Create Job
+        </a>
+
+        <a
+          href="{% url 'recruiter_profile' %}"
+          class="flex items-center gap-3 px-4 py-2 hover:bg-slate-100 rounded-lg"
+        >
+          <span class="material-icons">settings</span> Profile
+        </a>
+      </nav>
+    </aside>
+
+    <!-- MAIN -->
+    <main class="flex-1">
+      <div class="max-w-5xl mx-auto px-8 py-8">
+        <h1 class="text-3xl font-bold text-primary text-center mb-10">
+          {% if job %}Edit Job Posting{% else %}Create Job Posting{% endif %}
+        </h1>
+
+        <form method="POST">
+          {% csrf_token %}
+
+          <!-- STEP BAR -->
+
+          <div class="flex justify-center mb-10">
+            <div class="flex w-full max-w-2xl">
+              <div class="step-indicator active">1</div>
+              <div class="progress-line"></div>
+
+              <div class="step-indicator">2</div>
+              <div class="progress-line"></div>
+
+              <div class="step-indicator">3</div>
+              <div class="progress-line"></div>
+
+              <div class="step-indicator">4</div>
+            </div>
+          </div>
+
+          <div class="bg-white p-8 rounded-xl shadow border">
+            <!-- STEP 1 -->
+
+            <div id="step1" class="step">
+              <h2 class="text-xl font-bold text-primary mb-6">
+                Step 1 – Job Details
+              </h2>
+
+              <div class="grid md:grid-cols-2 gap-6">
+                <input
+                  id="job_title"
+                  name="title"
+                  value="{{ job.title|default:'' }}"
+                  placeholder="Job Title"
+                  class="input"
+                />
+
+                <select name="department" id="department" class="input">
+                  <option value="">Select Department</option>
+
+                  <option
+                    value="Design"
+                    {%
+                    if
+                    job
+                    and
+                    job.department=""
+                    ="Design"
+                    %}selected{%
+                    endif
+                    %}
+                  >
+                    Design
+                  </option>
+
+                  <option
+                    value="Engineering"
+                    {%
+                    if
+                    job
+                    and
+                    job.department=""
+                    ="Engineering"
+                    %}selected{%
+                    endif
+                    %}
+                  >
+                    Engineering
+                  </option>
+
+                  <option
+                    value="AI / ML"
+                    {%
+                    if
+                    job
+                    and
+                    job.department=""
+                    ="AI / ML"
+                    %}selected{%
+                    endif
+                    %}
+                  >
+                    AI / ML
+                  </option>
+
+                  <option
+                    value="Data Science"
+                    {%
+                    if
+                    job
+                    and
+                    job.department=""
+                    ="Data Science"
+                    %}selected{%
+                    endif
+                    %}
+                  >
+                    Data Science
+                  </option>
+
+                  <option
+                    value="Product"
+                    {%
+                    if
+                    job
+                    and
+                    job.department=""
+                    ="Product"
+                    %}selected{%
+                    endif
+                    %}
+                  >
+                    Product
+                  </option>
+
+                  <option
+                    value="Marketing"
+                    {%
+                    if
+                    job
+                    and
+                    job.department=""
+                    ="Marketing"
+                    %}selected{%
+                    endif
+                    %}
+                  >
+                    Marketing
+                  </option>
+                </select>
+
+                <select name="job_type" id="job_type" class="input">
+                  <option value="">Select Job Type</option>
+
+                  <option
+                    value="Full-time"
+                    {%
+                    if
+                    job
+                    and
+                    job.job_type=""
+                    ="Full-time"
+                    %}selected{%
+                    endif
+                    %}
+                  >
+                    Full-time
+                  </option>
+
+                  <option
+                    value="Part-time"
+                    {%
+                    if
+                    job
+                    and
+                    job.job_type=""
+                    ="Part-time"
+                    %}selected{%
+                    endif
+                    %}
+                  >
+                    Part-time
+                  </option>
+
+                  <option
+                    value="Contract"
+                    {%
+                    if
+                    job
+                    and
+                    job.job_type=""
+                    ="Contract"
+                    %}selected{%
+                    endif
+                    %}
+                  >
+                    Contract
+                  </option>
+
+                  <option
+                    value="Internship"
+                    {%
+                    if
+                    job
+                    and
+                    job.job_type=""
+                    ="Internship"
+                    %}selected{%
+                    endif
+                    %}
+                  >
+                    Internship
+                  </option>
+                </select>
+
+                <input
+                  id="company"
+                  name="company"
+                  value="{{ job.company|default:'' }}"
+                  placeholder="Company Name"
+                  class="input"
+                />
+
+                <div class="relative">
+                  <input
+                    id="district"
+                    name="district"
+                    value="{{ job.location|default:'' }}"
+                    class="input"
+                    placeholder="Type district or city"
+                  />
+
+                  <div id="district_dropdown" class="dropdown"></div>
+                </div>
+
+                <textarea
+                  id="description"
+                  name="description"
+                  class="input md:col-span-2"
+                  placeholder="Job Description"
+                >
+{{ job.description|default:'' }}</textarea
+                >
+              </div>
+
+              <div class="mt-8 flex justify-end">
+                <button type="button" onclick="nextStep()" class="btn-primary">
+                  Continue
+                </button>
+              </div>
+            </div>
+
+            <!-- STEP 2 -->
+
+            <div id="step2" class="step hidden">
+              <div class="relative">
+                <label class="font-semibold mb-2 block">
+                  Technical Skills
+                </label>
+
+                <input
+                  id="skills_input"
+                  placeholder="Type skill (Python, React...)"
+                  class="input"
+                />
+
+                <input type="hidden" id="skills_hidden" name="skills" />
+                <input
+                  type="hidden"
+                  id="skills_existing"
+                  value="{{ job.skills|default:'' }}"
+                />
+
+                <div id="skills_dropdown" class="dropdown hidden"></div>
+              </div>
+
+              <div id="skills_list" class="flex flex-wrap gap-2 mt-4"></div>
+
+              <div class="mt-8 flex justify-between">
+                <button
+                  type="button"
+                  onclick="prevStep()"
+                  class="btn-secondary"
+                >
+                  Back
+                </button>
+
+                <button type="button" onclick="nextStep()" class="btn-primary">
+                  Continue
+                </button>
+              </div>
+            </div>
+
+            <!-- STEP 3 -->
+
+            <div id="step3" class="step hidden">
+              <h2 class="text-xl font-bold text-primary mb-6">
+                Step 3 – Salary & Status
+              </h2>
+
+              <div class="grid md:grid-cols-2 gap-6">
+                <input
+                  id="salary_min"
+                  name="salary_min"
+                  type="number"
+                  value="{{ job.salary_min|default:'' }}"
+                  placeholder="Minimum Salary ₹"
+                  class="input"
+                />
+
+                <input
+                  id="salary_max"
+                  name="salary_max"
+                  type="number"
+                  value="{{ job.salary_max|default:'' }}"
+                  placeholder="Maximum Salary ₹"
+                  class="input"
+                />
+
+                <select name="salary_type" id="salary_type" class="input">
+                  <option
+                    value="Annual"
+                    {%
+                    if
+                    job
+                    and
+                    job.salary_type=""
+                    ="Annual"
+                    %}selected{%
+                    endif
+                    %}
+                  >
+                    Annual
+                  </option>
+
+                  <option
+                    value="Monthly"
+                    {%
+                    if
+                    job
+                    and
+                    job.salary_type=""
+                    ="Monthly"
+                    %}selected{%
+                    endif
+                    %}
+                  >
+                    Monthly
+                  </option>
+
+                  <option
+                    value="Hourly"
+                    {%
+                    if
+                    job
+                    and
+                    job.salary_type=""
+                    ="Hourly"
+                    %}selected{%
+                    endif
+                    %}
+                  >
+                    Hourly
+                  </option>
+                </select>
+
+                <select name="job_status" class="input">
+                  <option
+                    value="Active"
+                    {%
+                    if
+                    job
+                    and
+                    job.status=""
+                    ="Active"
+                    %}selected{%
+                    endif
+                    %}
+                  >
+                    Active
+                  </option>
+
+                  <option
+                    value="Inactive"
+                    {%
+                    if
+                    job
+                    and
+                    job.status=""
+                    ="Inactive"
+                    %}selected{%
+                    endif
+                    %}
+                  >
+                    Inactive
+                  </option>
+                </select>
+              </div>
+
+              <div class="mt-8 flex justify-between">
+                <button
+                  type="button"
+                  onclick="prevStep()"
+                  class="btn-secondary"
+                >
+                  Back
+                </button>
+
+                <button
+                  type="button"
+                  onclick="
+                    nextStep();
+                    generatePreview();
+                  "
+                  class="btn-primary"
+                >
+                  Continue
+                </button>
+              </div>
+            </div>
+
+            <!-- STEP 4 -->
+
+            <div id="step4" class="step hidden">
+              <h2 class="text-xl font-bold text-primary mb-6">
+                Step 4 – Candidate Live Preview
+              </h2>
+
+              <div class="bg-gray-50 border rounded-xl p-6">
+                <h3 id="preview_title" class="text-xl font-bold"></h3>
+
+                <p id="preview_company" class="text-gray-500"></p>
+
+                <div class="flex gap-6 mt-4 text-sm">
+                  <div>
+                    <p class="text-gray-400 text-xs">Salary</p>
+
+                    <p id="preview_salary" class="font-semibold"></p>
+                  </div>
+
+                  <div>
+                    <p class="text-gray-400 text-xs">Work Type</p>
+
+                    <p id="preview_type" class="font-semibold"></p>
+                  </div>
+                </div>
+
+                <div class="mt-4">
+                  <p class="text-xs text-gray-400 mb-2">Required Skills</p>
+
+                  <div id="preview_skills" class="flex flex-wrap gap-2"></div>
+                </div>
+
+                <div class="mt-4">
+                  <p class="text-xs text-gray-400 mb-1">Job Description</p>
+
+                  <p id="preview_desc"></p>
+                </div>
+              </div>
+
+              <div class="flex justify-between mt-8">
+                <button
+                  type="button"
+                  onclick="prevStep()"
+                  class="btn-secondary"
+                >
+                  Back
+                </button>
+
+                <button
+                  type="submit"
+                  class="btn-success"
+                  onclick="formChanged = false"
+                >
+                  {% if job %} Update Job {% else %} Post Job {% endif %}
+                </button>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </main>
+    <style>
+      .input {
+        width: 100%;
+        padding: 12px;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+      }
+
+      .btn-primary {
+        background: #137fec;
+        color: white;
+        padding: 10px 20px;
+        border-radius: 8px;
+      }
+
+      .btn-secondary {
+        background: #e5e7eb;
+        padding: 10px 20px;
+        border-radius: 8px;
+      }
+
+      .btn-success {
+        background: #10b981;
+        color: white;
+        padding: 10px 20px;
+        border-radius: 8px;
+      }
+
+      .step-indicator {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: #e5e7eb;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+      }
+
+      .step-indicator.active {
+        background: #137fec;
+        color: white;
+      }
+
+      .progress-line {
+        flex: 1;
+        height: 4px;
+        background: #e5e7eb;
+        margin-top: 18px;
+      }
+      /* dropdown container */
+
+      .dropdown {
+        position: absolute;
+        width: 100%;
+        background: white;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+        max-height: 200px;
+        overflow-y: auto;
+        z-index: 100;
+        margin-top: 4px;
+      }
+
+      /* dropdown item */
+
+      .dropdown div {
+        padding: 10px;
+        cursor: pointer;
+      }
+
+      .dropdown div:hover {
+        background: #f3f4f6;
+      }
+
+      /* skill tag */
+
+      .skill-tag {
+        background: #dbeafe;
+        color: #1e40af;
+        padding: 6px 12px;
+        border-radius: 20px;
+        font-size: 14px;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+
+      /* remove icon */
+
+      .skill-tag span {
+        cursor: pointer;
+        font-weight: bold;
+      }
+    </style>
+
+    <script>
+      let currentStep = 1;
+      const steps = document.querySelectorAll(".step");
+      const indicators = document.querySelectorAll(".step-indicator");
+
+      function updateSteps() {
+        steps.forEach((s, i) => {
+          s.classList.toggle("hidden", i !== currentStep - 1);
+        });
+
+        indicators.forEach((c, i) => {
+          c.classList.toggle("active", i <= currentStep - 1);
+        });
+      }
+
+      function nextStep() {
+        if (currentStep < 4) {
+          currentStep++;
+          updateSteps();
+        }
+      }
+
+      function prevStep() {
+        if (currentStep > 1) {
+          currentStep--;
+          updateSteps();
+        }
+      }
+
+      function generatePreview() {
+        document.getElementById("preview_title").innerText =
+          document.getElementById("job_title").value;
+
+        document.getElementById("preview_company").innerText =
+          document.getElementById("company").value +
+          " • " +
+          document.getElementById("district").value;
+
+        document.getElementById("preview_salary").innerText =
+          "₹" +
+          document.getElementById("salary_min").value +
+          " - ₹" +
+          document.getElementById("salary_max").value;
+
+        document.getElementById("preview_type").innerText =
+          document.getElementById("job_type").value;
+
+        document.getElementById("preview_desc").innerText =
+          document.getElementById("description").value;
+
+        const previewSkills = document.getElementById("preview_skills");
+
+        previewSkills.innerHTML = "";
+
+        selectedSkills.forEach((skill) => {
+          const span = document.createElement("span");
+
+          span.className = "bg-gray-200 px-2 py-1 rounded text-xs";
+
+          span.innerText = skill;
+
+          previewSkills.appendChild(span);
+        });
+      }
+
+      let cities = [];
+
+      async function loadCities() {
+        const res = await fetch(
+          "https://countriesnow.space/api/v0.1/countries/cities",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              country: "India",
+            }),
+          },
+        );
+
+        const data = await res.json();
+
+        cities = data.data;
+      }
+
+      loadCities();
+
+      const districtInput = document.getElementById("district");
+      const dropdown = document.getElementById("district_dropdown");
+
+      districtInput.addEventListener("input", function () {
+        const query = districtInput.value.toLowerCase();
+
+        dropdown.innerHTML = "";
+
+        if (query.length < 1) return;
+
+        const results = cities.filter((city) =>
+          city.toLowerCase().includes(query),
+        );
+
+        results.slice(0, 10).forEach((city) => {
+          const div = document.createElement("div");
+
+          div.className = "p-2 hover:bg-gray-100 cursor-pointer";
+
+          div.innerText = city;
+
+          div.onclick = () => {
+            districtInput.value = city;
+            dropdown.innerHTML = "";
+          };
+
+          dropdown.appendChild(div);
+        });
+      });
+
+      let skills = [];
+
+      async function loadSkills() {
+        const res = await fetch(
+          "https://gist.githubusercontent.com/theikkila/596d1265ae086c6d1c5e/raw",
+        );
+
+        skills = await res.json();
+      }
+
+      loadSkills();
+      const skillsInput = document.getElementById("skills_input");
+      const skillsDropdown = document.getElementById("skills_dropdown");
+      const skillsList = document.getElementById("skills_list");
+
+      let selectedSkills = [];
+      /* restore skills when editing */
+
+      document.addEventListener("DOMContentLoaded", function () {
+        const existingSkills = document.getElementById("skills_existing").value;
+
+        if (existingSkills) {
+          selectedSkills = existingSkills.split(",");
+
+          renderSkills();
+        }
+      });
+
+      /* show suggestions */
+
+      skillsInput.addEventListener("input", function () {
+        const query = skillsInput.value.toLowerCase();
+
+        skillsDropdown.innerHTML = "";
+
+        if (query.length < 1) {
+          skillsDropdown.classList.add("hidden");
+          return;
+        }
+
+        const results = skills.filter((skill) =>
+          skill.toLowerCase().includes(query),
+        );
+
+        results.slice(0, 8).forEach((skill) => {
+          const div = document.createElement("div");
+
+          div.className = "p-2 hover:bg-gray-100 cursor-pointer";
+
+          div.innerText = skill;
+
+          div.onclick = () => addSkill(skill);
+
+          skillsDropdown.appendChild(div);
+        });
+
+        skillsDropdown.classList.remove("hidden");
+      });
+      /* add skill */
+
+      function addSkill(skill) {
+        if (selectedSkills.includes(skill)) return;
+
+        selectedSkills.push(skill);
+
+        renderSkills();
+
+        skillsInput.value = "";
+
+        skillsDropdown.innerHTML = "";
+
+        skillsDropdown.classList.add("hidden");
+      }
+
+      /* render skill tags */
+
+      function renderSkills() {
+        skillsList.innerHTML = "";
+
+        selectedSkills.forEach((skill) => {
+          const tag = document.createElement("div");
+
+          tag.className = "skill-tag";
+
+          tag.innerHTML = `
+${skill}
+<span onclick="removeSkill('${skill}')">✖</span>
+`;
+
+          skillsList.appendChild(tag);
+        });
+
+        /* update hidden input for backend */
+
+        document.getElementById("skills_hidden").value =
+          selectedSkills.join(",");
+      }
+
+      /* remove skill */
+
+      function removeSkill(skill) {
+        selectedSkills = selectedSkills.filter((s) => s !== skill);
+
+        renderSkills();
+      }
+
+      function getCookie(name) {
+        let cookieValue = null;
+
+        if (document.cookie && document.cookie !== "") {
+          const cookies = document.cookie.split(";");
+
+          for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+
+            if (cookie.substring(0, name.length + 1) === name + "=") {
+              cookieValue = decodeURIComponent(
+                cookie.substring(name.length + 1),
+              );
+
+              break;
+            }
+          }
+        }
+
+        return cookieValue;
+      }
+      function submitJob() {
+        const data = {
+          title: document.getElementById("job_title").value,
+          department: document.getElementById("department").value,
+          job_type: document.getElementById("job_type").value,
+          company: document.getElementById("company").value,
+          district: document.getElementById("district").value,
+          skills: selectedSkills,
+          salary_min: document.getElementById("salary_min").value,
+          salary_max: document.getElementById("salary_max").value,
+          description: document.getElementById("description").value,
+        };
+
+        fetch("/jobs/create/", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "X-CSRFToken": getCookie("csrftoken"),
+          },
+          body: JSON.stringify(data),
+        })
+          .then((res) => res.json())
+          .then(() => {
+            alert("Job Posted Successfully");
+
+            window.location.href = "/job_manage/";
+          });
+      }
+
+      let formChanged = false;
+
+      /* detect changes in form */
+
+      const formInputs = document.querySelectorAll("input, textarea, select");
+
+      formInputs.forEach((input) => {
+        input.addEventListener("change", () => {
+          formChanged = true;
+        });
+      });
+
+      /* detect page leave */
+
+      window.addEventListener("beforeunload", function (e) {
+        if (formChanged) {
+          e.preventDefault();
+
+          e.returnValue = "";
+        }
+      });
+    </script>
+  </body>
+</html>

@@ -1,0 +1,44 @@
+<script src="https://cdn.tailwindcss.com"></script>
+
+<div class="max-w-6xl mx-auto p-10">
+  <h1 class="text-2xl font-bold mb-6">Applicants for {{ job.title }}</h1>
+
+  <table class="w-full border">
+    <tr class="bg-gray-100">
+      <th class="p-3">Name</th>
+      <th>Email</th>
+      <th>Phone</th>
+      <th>College</th>
+      <th>Department</th>
+      <th>Experience</th>
+      <th>Resume</th>
+    </tr>
+
+    {% for app in applicants %}
+
+    <tr class="border-t">
+      <td class="p-3">{{ app.name }}</td>
+      <td>{{ app.email }}</td>
+      <td>{{ app.phone }}</td>
+      <td>{{ app.college }}</td>
+      <td>{{ app.department }}</td>
+      <td>{{ app.experience }}</td>
+
+      <td>
+        <a href="{{ app.resume.url }}" class="text-blue-600 underline">
+          View
+        </a>
+      </td>
+    </tr>
+
+    {% empty %}
+
+    <tr>
+      <td colspan="7" class="p-6 text-center text-gray-500">
+        No applicants yet
+      </td>
+    </tr>
+
+    {% endfor %}
+  </table>
+</div>

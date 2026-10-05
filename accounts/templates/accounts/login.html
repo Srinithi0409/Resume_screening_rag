@@ -1,0 +1,136 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>Login - Screening Pro</title>
+    <link rel="stylesheet" href="{% static 'accounts/styles/main.css' %}" />
+  </head>
+
+  <body class="login-page">
+    <div class="login-container">
+      <div class="left-panel">
+        <h1>Resume Screening</h1>
+        <p>
+          Securely manage resume and job applications with our intuitive
+          screening platform.
+        </p>
+      </div>
+
+      <div class="right-panel">
+        <h2>Welcome Back</h2>
+        <p>Please login to your account</p>
+
+        <!-- ✅ SINGLE DJANGO FORM -->
+        <form method="POST">
+          {% csrf_token %}
+
+          <!-- ROLE -->
+          <div class="role-select">
+            <label>
+              <input type="radio" name="role" value="student" checked />
+              Student / Fresher
+            </label>
+
+            <label>
+              <input type="radio" name="role" value="recruiter" />
+              Recruiter
+            </label>
+          </div>
+
+          <!-- USERNAME -->
+          <div class="form-group">
+            <label for="username">Username</label>
+            <input
+              type="text"
+              id="username"
+              name="username"
+              placeholder="Enter your username"
+              required
+            />
+          </div>
+
+          <!-- PASSWORD -->
+          <div class="form-group password-wrapper">
+            <label for="password">Password</label>
+            <input
+              type="password"
+              id="password"
+              name="password"
+              placeholder="Enter your password"
+              required
+            />
+
+            <!-- 👁 Eye Icon -->
+            <svg
+              id="togglePassword"
+              class="toggle-password"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M15 12a3 3 0 11-6 0 3 3 0 016 0zm-3-8
+                   C6.477 4 2 12 2 12s4.477 8 10 8
+                   10-8 10-8-4.477-8-10-8z"
+              />
+            </svg>
+          </div>
+
+          <div class="extras">
+            <label>
+              <input type="checkbox" name="remember" />
+              Remember me
+            </label>
+            <a href="#">Forgot password?</a>
+          </div>
+
+          <button type="submit" class="login-btn">Log In</button>
+
+          <!-- ERROR MESSAGE -->
+          {% if message %}
+          <p style="color: red; margin-top: 10px">{{ message }}</p>
+          {% endif %}
+        </form>
+
+        <div class="signup">
+          Don't have an account? <a href="#">Sign up now</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- ✅ PASSWORD TOGGLE SCRIPT -->
+    <script>
+      const togglePassword = document.getElementById("togglePassword");
+      const passwordInput = document.getElementById("password");
+
+      togglePassword.addEventListener("click", () => {
+        const isPassword = passwordInput.type === "password";
+        passwordInput.type = isPassword ? "text" : "password";
+
+        togglePassword.innerHTML = isPassword
+          ? `
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M13.875 18.825A10.05 10.05 0 0112 19
+                 c-5.523 0-10-7-10-7
+                 a17.978 17.978 0 014.246-4.746M9.88 9.88
+                 a3 3 0 104.24 4.24" />
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M3 3l18 18" />
+          `
+          : `
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M15 12a3 3 0 11-6 0 3 3 0 016 0zm-3-8
+                 C6.477 4 2 12 2 12s4.477 8 10 8
+                 10-8 10-8-4.477-8-10-8z" />
+          `;
+      });
+    </script>
+  </body>
+</html>

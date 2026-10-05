@@ -1,0 +1,691 @@
+<!doctype html>
+
+<html class="light" lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Candidate Profile Settings - AI Resume Screen</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/icon?family=Material+Icons"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+      rel="stylesheet"
+    />
+    <meta name="csrf-token" content="{{ csrf_token }}" />
+    <script>
+      const saveProfileUrl = "{% url 'save_profile' %}";
+    </script>
+
+    <script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              primary: "#137fec",
+              "background-light": "#f6f7f8",
+              "background-dark": "#101922",
+            },
+            fontFamily: {
+              display: ["Inter"],
+            },
+            borderRadius: {
+              DEFAULT: "0.25rem",
+              lg: "0.5rem",
+              xl: "0.75rem",
+              full: "9999px",
+            },
+          },
+        },
+      };
+    </script>
+    <style>
+      body {
+        font-family: "Inter", sans-serif;
+      }
+      .sidebar-item-active {
+        background-color: rgba(19, 127, 236, 0.1);
+        border-left: 4px solid #137fec;
+        color: #137fec;
+      }
+    </style>
+  </head>
+  <body
+    class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 font-display min-h-screen"
+  >
+    <div class="flex">
+      <!-- Sidebar Navigation -->
+      <aside
+        class="w-64 flex-shrink-0 bg-white dark:bg-background-dark border-r border-slate-200 dark:border-slate-800 flex flex-col"
+      >
+        <div class="p-6 flex items-center gap-3">
+          <div
+            class="w-8 h-8 bg-primary rounded-lg flex items-center justify-center"
+          >
+            <span class="material-icons text-white text-xl">auto_awesome</span>
+          </div>
+          <span
+            class="font-bold text-xl tracking-tight text-slate-800 dark:text-white"
+            >AI Scout</span
+          >
+        </div>
+        <nav class="flex-1 px-4 space-y-1">
+          <!-- Jobs -->
+          <a
+            href="{% url 'jobs' %}"
+            class="flex items-center gap-3 px-4 py-3 {% if request.resolver_match.url_name == 'jobs' %} bg-primary/10 text-primary font-medium {% else %} text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 {% endif %} rounded-lg transition-colors"
+          >
+            <span class="material-icons">work_outline</span>
+            <span>Jobs</span>
+          </a>
+        </nav>
+
+        <div
+          class="p-4 mt-auto border-t border-slate-200 dark:border-slate-800"
+        >
+          <a
+            class="flex items-center gap-3 px-4 py-3 text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-lg transition-colors"
+            href="{% url 'profile' %}"
+          >
+            <span class="material-icons">settings</span>
+            <span>Settings</span>
+          </a>
+          <a
+            class="flex items-center gap-3 px-4 py-3 text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors"
+            href="{% url 'logout' %}"
+          >
+            <span class="material-icons">logout</span>
+            <span>Logout</span>
+          </a>
+        </div>
+      </aside>
+      <!-- Main Content -->
+      <main class="flex-1 p-8">
+        <!-- Top Header & Profile Strength -->
+        <div class="max-w-6xl mx-auto mb-8">
+          <div class="flex justify-between items-end mb-6">
+            <div>
+              <h1 class="text-2xl font-bold text-slate-900 dark:text-white">
+                Profile Settings
+              </h1>
+              <p class="text-slate-500 dark:text-slate-400 mt-1">
+                Manage your professional information for AI matching.
+              </p>
+            </div>
+          </div>
+          <div
+            class="bg-white dark:bg-slate-900 p-6 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm"
+          >
+            <div class="flex items-center justify-between mb-2">
+              <div class="flex items-center gap-2">
+                <span
+                  class="text-sm font-semibold text-slate-700 dark:text-slate-300"
+                  >Profile Strength:</span
+                >
+                <span
+                  id="profileStrengthText"
+                  class="text-sm font-bold text-primary"
+                  >0% Complete</span
+                >
+              </div>
+              <span id="profileStrengthHint" class="text-xs text-slate-500"
+                >Add more info to improve AI matching</span
+              >
+            </div>
+            <div
+              class="w-full bg-slate-100 dark:bg-slate-800 h-2.5 rounded-full overflow-hidden"
+            >
+              <div
+                id="profileStrengthBar"
+                class="bg-primary h-2.5 rounded-full transition-all duration-500"
+                style="width: 0%"
+              ></div>
+            </div>
+          </div>
+        </div>
+        <div class="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-8">
+          <!-- Left Column: Identity & Contact -->
+          <div class="lg:col-span-4 space-y-6">
+            <div
+              class="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden"
+            >
+              <div
+                class="p-8 text-center flex flex-col items-center border-b border-slate-100 dark:border-slate-800"
+              >
+                <div class="relative group">
+                  <img
+                    alt="Candidate Profile"
+                    class="w-32 h-32 rounded-full object-cover border-4 border-white dark:border-slate-800 shadow-lg"
+                    data-alt="Professional portrait of a male candidate with glasses"
+                    src="https://lh3.googleusercontent.com/aida-public/AB6AXuCiKAe4q1Wq-37aeaiQOHE4xVWPTQKTY70QnO7IJchfauKUQ5wiG_iE637XXFlyKAdDm7kcajwjYGtLHBeOWHrZv78x9O3orJHRdiUp_xIfG3GdfKvCEfGXR72aMzz6WGDJZUjXGMDldRZvvuyCyynUitGjNS6razrFVGL7j30Q9y_hIGk8pWPuRr9F6b3exw9GRxjeqZ-79TmsnK0KIh5LozhbHoL63RtFcRWpWd3-0yFjTyXrHBioKmMwgYNH7i94YIv3uWZfqw"
+                  />
+                  <button
+                    class="absolute bottom-1 right-1 bg-primary text-white p-2 rounded-full shadow-md hover:bg-blue-600"
+                  >
+                    <span class="material-icons text-sm">photo_camera</span>
+                  </button>
+                </div>
+                <h2 id="profileName">{{ student.name }}</h2>
+
+                <p id="profileRole">{{ student.role }}</p>
+                <span id="profilePlaceText">{{ student.place }}</span>
+
+                <button
+                  id="openProfileModal"
+                  class="p-2 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 transition"
+                >
+                  <span class="material-icons text-primary">edit</span>
+                </button>
+              </div>
+              <div class="p-6 space-y-4">
+                <div class="flex items-center gap-4 group">
+                  <div
+                    class="w-10 h-10 bg-slate-50 dark:bg-slate-800 rounded-lg flex items-center justify-center text-slate-500"
+                  >
+                    <span class="material-icons text-lg">mail</span>
+                  </div>
+                  <div>
+                    <p
+                      class="text-xs text-slate-500 uppercase tracking-wider font-semibold"
+                    >
+                      Email Address
+                    </p>
+                    <p id="profileEmail">{{ student.email }}</p>
+                  </div>
+                </div>
+                <div class="flex items-center gap-4 group">
+                  <div
+                    class="w-10 h-10 bg-slate-50 dark:bg-slate-800 rounded-lg flex items-center justify-center text-slate-500"
+                  >
+                    <span class="material-icons text-lg">phone</span>
+                  </div>
+                  <div>
+                    <p
+                      class="text-xs text-slate-500 uppercase tracking-wider font-semibold"
+                    >
+                      Phone Number
+                    </p>
+                    <p id="profilePhone">{{ student.phone }}</p>
+                  </div>
+                </div>
+                <div class="flex items-center gap-4 group">
+                  <div
+                    class="w-10 h-10 bg-slate-50 dark:bg-slate-800 rounded-lg flex items-center justify-center text-slate-500"
+                  >
+                    <span class="material-icons text-lg">link</span>
+                  </div>
+                  <div>
+                    <p
+                      class="text-xs text-slate-500 uppercase tracking-wider font-semibold"
+                    >
+                      LinkedIn Profile
+                    </p>
+                    <p id="profileLinkedin">{{ student.linkedin }}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- Resume Widget -->
+            <div
+              class="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm p-6"
+            >
+              <div class="flex items-center justify-between mb-4">
+                <h3 class="font-bold text-slate-900 dark:text-white">Resume</h3>
+                <span
+                  class="text-[10px] bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400 px-2 py-0.5 rounded-full uppercase font-bold"
+                  >Active</span
+                >
+              </div>
+              <div
+                class="bg-slate-50 dark:bg-slate-800/50 p-4 rounded-lg border border-dashed border-slate-300 dark:border-slate-700 flex items-center gap-4"
+              >
+                <div
+                  class="w-12 h-12 bg-red-50 text-red-500 flex items-center justify-center rounded-lg"
+                >
+                  <span class="material-icons text-2xl">picture_as_pdf</span>
+                </div>
+                <div class="flex-1 min-w-0">
+                  <p class="text-sm font-semibold truncate">
+                    Alex_Johnson_Resume.pdf
+                  </p>
+                  <p class="text-xs text-slate-500">Uploaded 2 days ago</p>
+                </div>
+              </div>
+              <div class="grid grid-cols-2 gap-3 mt-4">
+                <button
+                  class="flex items-center justify-center gap-2 py-2 px-3 border border-slate-200 dark:border-slate-700 rounded-lg text-sm font-medium hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors"
+                >
+                  <span class="material-icons text-sm">visibility</span> View
+                </button>
+                <button
+                  class="flex items-center justify-center gap-2 py-2 px-3 border border-slate-200 dark:border-slate-700 rounded-lg text-sm font-medium hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors"
+                >
+                  <span class="material-icons text-sm">download</span> Download
+                </button>
+                <button
+                  class="col-span-2 flex items-center justify-center gap-2 py-2.5 px-3 bg-primary/10 text-primary border border-primary/20 rounded-lg text-sm font-bold hover:bg-primary/20 transition-colors"
+                >
+                  <span class="material-icons text-sm">upload_file</span>
+                  Replace Resume
+                </button>
+              </div>
+            </div>
+          </div>
+          <!-- Right Column: Bio, Skills, Work & Education -->
+          <div class="lg:col-span-8 space-y-8">
+            <!-- Bio Section -->
+            <section
+              class="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden"
+            >
+              <div
+                class="p-6 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between"
+              >
+                <h3
+                  class="font-bold text-lg text-slate-900 dark:text-white flex items-center gap-2"
+                >
+                  <span class="material-icons text-primary">person_search</span>
+                  Professional Summary
+                </h3>
+                <button
+                  id="editSummaryBtn"
+                  class="text-primary text-sm font-semibold flex items-center gap-1 hover:underline"
+                >
+                  <span class="material-icons text-sm">edit</span> Edit
+                </button>
+              </div>
+              <div class="p-6">
+                <textarea
+                  id="summaryText"
+                  class="w-full bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700 rounded-lg text-slate-700 dark:text-slate-300 text-sm leading-relaxed p-4"
+                  placeholder="Tell us about your professional background..."
+                  rows="4"
+                ></textarea>
+              </div>
+            </section>
+            <!-- Skills Cloud -->
+            <section
+              class="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden"
+            >
+              <div
+                class="p-6 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between"
+              >
+                <h3
+                  class="font-bold text-lg text-slate-900 dark:text-white flex items-center gap-2"
+                >
+                  <span class="material-icons text-primary">psychology</span>
+                  Core Skills
+                </h3>
+                <button
+                  id="addSkillBtn"
+                  class="text-primary text-sm font-semibold flex items-center gap-1 hover:underline"
+                >
+                  <span class="material-icons text-sm">add</span> Add Skill
+                </button>
+              </div>
+              <div class="p-6">
+                <div class="flex flex-wrap gap-2">
+                  <span
+                    class="px-4 py-1.5 bg-primary/10 text-primary rounded-full text-sm font-medium flex items-center gap-2"
+                  >
+                    React.js
+                    <span class="material-icons text-xs cursor-pointer"
+                      >close</span
+                    >
+                  </span>
+                  <span
+                    class="px-4 py-1.5 bg-primary/10 text-primary rounded-full text-sm font-medium flex items-center gap-2"
+                  >
+                    Node.js
+                    <span class="material-icons text-xs cursor-pointer"
+                      >close</span
+                    >
+                  </span>
+                  <span
+                    class="px-4 py-1.5 bg-primary/10 text-primary rounded-full text-sm font-medium flex items-center gap-2"
+                  >
+                    TypeScript
+                    <span class="material-icons text-xs cursor-pointer"
+                      >close</span
+                    >
+                  </span>
+                  <span
+                    class="px-4 py-1.5 bg-primary/10 text-primary rounded-full text-sm font-medium flex items-center gap-2"
+                  >
+                    AWS
+                    <span class="material-icons text-xs cursor-pointer"
+                      >close</span
+                    >
+                  </span>
+                  <span
+                    class="px-4 py-1.5 bg-primary/10 text-primary rounded-full text-sm font-medium flex items-center gap-2"
+                  >
+                    Python
+                    <span class="material-icons text-xs cursor-pointer"
+                      >close</span
+                    >
+                  </span>
+                  <span
+                    class="px-4 py-1.5 bg-primary/10 text-primary rounded-full text-sm font-medium flex items-center gap-2"
+                  >
+                    GraphQL
+                    <span class="material-icons text-xs cursor-pointer"
+                      >close</span
+                    >
+                  </span>
+                  <span
+                    class="px-4 py-1.5 bg-primary/10 text-primary rounded-full text-sm font-medium flex items-center gap-2"
+                  >
+                    Docker
+                    <span class="material-icons text-xs cursor-pointer"
+                      >close</span
+                    >
+                  </span>
+                </div>
+              </div>
+            </section>
+            <!-- Work Experience -->
+            <section
+              class="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden"
+            >
+              <div
+                class="p-6 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between"
+              >
+                <h3
+                  class="font-bold text-lg text-slate-900 dark:text-white flex items-center gap-2"
+                >
+                  <span class="material-icons text-primary">history_edu</span>
+                  Work Experience
+                </h3>
+                <button
+                  id="addWorkBtn"
+                  class="text-primary text-sm font-semibold flex items-center gap-1 hover:underline"
+                >
+                  <span class="material-icons text-sm">add</span> Add New
+                </button>
+              </div>
+              <div class="p-6 space-y-8">
+                <!-- Job Item 1 -->
+                <div
+                  class="relative pl-8 before:content-[''] before:absolute before:left-0 before:top-2 before:bottom-0 before:w-px before:bg-slate-200 dark:before:bg-slate-700"
+                >
+                  <div
+                    class="absolute left-[-4px] top-2 w-2 h-2 rounded-full bg-primary ring-4 ring-primary/20"
+                  ></div>
+                  <div class="flex items-start justify-between">
+                    <div>
+                      <h4
+                        class="font-bold text-slate-900 dark:text-white text-base"
+                      >
+                        Senior Frontend Engineer
+                      </h4>
+                      <p class="text-primary font-medium text-sm">
+                        TechFlow Solutions • Full-time
+                      </p>
+                      <p class="text-xs text-slate-500 mt-1">
+                        Jan 2020 – Present (4 yrs 2 mos)
+                      </p>
+                    </div>
+                    <div class="flex gap-2">
+                      <button
+                        class="p-1.5 text-slate-400 hover:text-primary transition-colors"
+                      >
+                        <span class="material-icons text-lg">edit</span>
+                      </button>
+                      <button
+                        class="p-1.5 text-slate-400 hover:text-red-500 transition-colors"
+                      >
+                        <span class="material-icons text-lg">delete</span>
+                      </button>
+                    </div>
+                  </div>
+                  <div
+                    class="mt-3 text-sm text-slate-600 dark:text-slate-400 space-y-2"
+                  >
+                    <p>
+                      • Lead developer for a core SaaS product reaching 1M+
+                      users monthly.
+                    </p>
+                    <p>
+                      • Spearheaded the migration from a monolithic architecture
+                      to micro-frontends.
+                    </p>
+                    <p>
+                      • Mentored a team of 5 junior and mid-level developers.
+                    </p>
+                  </div>
+                </div>
+                <!-- Job Item 2 -->
+                <div
+                  class="relative pl-8 before:content-[''] before:absolute before:left-0 before:top-2 before:bottom-0 before:w-px before:bg-slate-200 dark:before:bg-slate-700"
+                >
+                  <div
+                    class="absolute left-[-4px] top-2 w-2 h-2 rounded-full bg-slate-300 dark:bg-slate-600"
+                  ></div>
+                  <div class="flex items-start justify-between">
+                    <div>
+                      <h4
+                        class="font-bold text-slate-900 dark:text-white text-base"
+                      >
+                        Full Stack Developer
+                      </h4>
+                      <p class="text-primary font-medium text-sm">
+                        Innova Digital • Full-time
+                      </p>
+                      <p class="text-xs text-slate-500 mt-1">
+                        Mar 2017 – Dec 2019 (2 yrs 10 mos)
+                      </p>
+                    </div>
+                    <div class="flex gap-2">
+                      <button
+                        class="p-1.5 text-slate-400 hover:text-primary transition-colors"
+                      >
+                        <span class="material-icons text-lg">edit</span>
+                      </button>
+                      <button
+                        class="p-1.5 text-slate-400 hover:text-red-500 transition-colors"
+                      >
+                        <span class="material-icons text-lg">delete</span>
+                      </button>
+                    </div>
+                  </div>
+                  <div
+                    class="mt-3 text-sm text-slate-600 dark:text-slate-400 space-y-2"
+                  >
+                    <p>
+                      • Developed and maintained customer-facing dashboards
+                      using React and Express.
+                    </p>
+                    <p>• Optimized SQL queries reducing load times by 40%.</p>
+                  </div>
+                </div>
+              </div>
+            </section>
+            <!-- Education -->
+            <section
+              class="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden"
+            >
+              <div
+                class="p-6 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between"
+              >
+                <h3
+                  class="font-bold text-lg text-slate-900 dark:text-white flex items-center gap-2"
+                >
+                  <span class="material-icons text-primary">school</span>
+                  Education
+                </h3>
+                <button
+                  id="addEducationBtn"
+                  class="text-primary text-sm font-semibold flex items-center gap-1 hover:underline"
+                >
+                  <span class="material-icons text-sm">add</span> Add New
+                </button>
+              </div>
+              <div class="p-6 space-y-6">
+                <div class="flex items-start gap-4">
+                  <div
+                    class="w-12 h-12 bg-slate-100 dark:bg-slate-800 rounded-lg flex items-center justify-center text-slate-500 flex-shrink-0"
+                  >
+                    <span class="material-icons">account_balance</span>
+                  </div>
+                  <div class="flex-1">
+                    <div class="flex justify-between">
+                      <h4 id="educationInstitution">
+                        {{ student.institution }}
+                      </h4>
+                      <p id="educationDegree">{{ student.degree }}</p>
+                      <span id="educationYear">{{ student.year }}</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </section>
+          </div>
+        </div>
+      </main>
+    </div>
+    <!-- Profile Edit Modal -->
+    <div
+      id="profileModal"
+      class="fixed inset-0 bg-black/50 hidden items-center justify-center z-50"
+    >
+      <div
+        class="bg-white dark:bg-slate-900 w-full max-w-lg rounded-xl shadow-xl p-6"
+      >
+        <!-- Title -->
+        <h2 class="text-xl font-bold mb-6 text-slate-900 dark:text-white">
+          Edit Profile
+        </h2>
+
+        <!-- Inputs -->
+        <div class="space-y-4">
+          <!-- Name -->
+          <div>
+            <label class="block text-sm font-medium mb-1">Full Name</label>
+            <input
+              id="inputName"
+              type="text"
+              class="w-full border border-slate-300 dark:border-slate-700 rounded-lg p-2 bg-slate-50 dark:bg-slate-800 focus:ring-2 focus:ring-primary outline-none"
+            />
+          </div>
+
+          <!-- Role -->
+          <div>
+            <label class="block text-sm font-medium mb-1">Role</label>
+            <input
+              id="inputRole"
+              type="text"
+              class="w-full border border-slate-300 dark:border-slate-700 rounded-lg p-2 bg-slate-50 dark:bg-slate-800 focus:ring-2 focus:ring-primary outline-none"
+            />
+          </div>
+
+          <!-- Place -->
+          <div>
+            <label class="block text-sm font-medium mb-1">Place</label>
+            <input
+              id="inputPlace"
+              type="text"
+              class="w-full border border-slate-300 dark:border-slate-700 rounded-lg p-2 bg-slate-50 dark:bg-slate-800 focus:ring-2 focus:ring-primary outline-none"
+            />
+          </div>
+
+          <!-- Email -->
+          <div>
+            <label class="block text-sm font-medium mb-1">Email Address</label>
+            <input
+              id="inputEmail"
+              type="email"
+              class="w-full border border-slate-300 dark:border-slate-700 rounded-lg p-2 bg-slate-50 dark:bg-slate-800 focus:ring-2 focus:ring-primary outline-none"
+            />
+          </div>
+
+          <!-- Phone -->
+          <div>
+            <label class="block text-sm font-medium mb-1">Phone Number</label>
+            <input
+              id="inputPhone"
+              type="text"
+              class="w-full border border-slate-300 dark:border-slate-700 rounded-lg p-2 bg-slate-50 dark:bg-slate-800 focus:ring-2 focus:ring-primary outline-none"
+            />
+          </div>
+
+          <!-- LinkedIn -->
+          <div>
+            <label class="block text-sm font-medium mb-1">LinkedIn URL</label>
+            <input
+              id="inputLinkedin"
+              type="text"
+              class="w-full border border-slate-300 dark:border-slate-700 rounded-lg p-2 bg-slate-50 dark:bg-slate-800 focus:ring-2 focus:ring-primary outline-none"
+            />
+          </div>
+        </div>
+
+        <!-- Footer Buttons -->
+        <div class="flex justify-end gap-3 mt-6">
+          <button
+            id="closeProfileModal"
+            class="px-4 py-2 rounded-lg border border-slate-300 dark:border-slate-600 hover:bg-slate-100 dark:hover:bg-slate-800 transition"
+          >
+            Cancel
+          </button>
+
+          <button
+            id="saveProfileBtn"
+            class="px-4 py-2 rounded-lg bg-primary text-white hover:bg-blue-600 transition"
+          >
+            OK
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Universal Modal -->
+    <div
+      id="dynamicModal"
+      class="fixed inset-0 bg-black/40 hidden items-center justify-center z-50"
+    >
+      <div
+        class="bg-white dark:bg-slate-900 w-full max-w-lg rounded-2xl shadow-2xl p-8"
+      >
+        <div class="flex justify-between items-center mb-6">
+          <h2
+            id="modalTitle"
+            class="text-xl font-bold text-slate-900 dark:text-white"
+          >
+            Title
+          </h2>
+
+          <button id="closeModal" class="text-slate-400 hover:text-slate-600">
+            <span class="material-icons">close</span>
+          </button>
+        </div>
+
+        <div id="modalContent" class="space-y-4">
+          <!-- Dynamic content will appear here -->
+        </div>
+
+        <div class="flex justify-end gap-3 mt-6">
+          <button id="cancelModal" class="px-4 py-2 border rounded-lg">
+            Cancel
+          </button>
+
+          <button
+            id="modalSaveBtn"
+            class="px-4 py-2 bg-primary text-white rounded-lg"
+          >
+            Save
+          </button>
+        </div>
+      </div>
+    </div>
+
+    {% load static %}
+    <script src="{% static 'js/profile.js' %}"></script>
+  </body>
+</html>

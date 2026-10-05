@@ -1,0 +1,572 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>Recruiter Profile Settings</title>
+
+    <script src="https://cdn.tailwindcss.com?plugins=forms"></script>
+
+    <link
+      href="https://fonts.googleapis.com/icon?family=Material+Icons"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined"
+      rel="stylesheet"
+    />
+
+    <script>
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              primary: "#137fec",
+              "background-light": "#f8fafc",
+              "background-dark": "#0f172a",
+            },
+            fontFamily: {
+              display: ["Inter"],
+            },
+          },
+        },
+      };
+    </script>
+
+    <style type="text/tailwindcss">
+      @layer base {
+        body {
+          @apply bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-slate-100;
+        }
+      }
+    </style>
+  </head>
+
+  <body class="min-h-screen flex">
+    <!-- SIDEBAR -->
+
+    <aside
+      class="hidden md:flex flex-col w-64 bg-white dark:bg-slate-900 border-r border-slate-200 dark:border-slate-800 p-6"
+    >
+      <div class="mb-8">
+        <h1 class="text-xl font-bold text-primary flex items-center gap-2">
+          <span class="material-symbols-outlined">rocket_launch</span>
+          Recruiter Hub
+        </h1>
+      </div>
+
+      <nav class="flex-1 px-4 py-6 space-y-2">
+        <a
+          href="{% url 'job_manage' %}"
+          class="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800"
+        >
+          <span class="material-icons">work</span>
+          Jobs
+        </a>
+      </nav>
+
+      <div class="px-6 py-4 border-t border-slate-200 dark:border-slate-800">
+        <a
+          class="flex items-center gap-3 px-4 py-3 text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-lg transition-colors"
+        >
+          <span class="material-icons">settings</span>
+          Settings
+        </a>
+        <a
+          href="{% url 'logout' %}"
+          class="w-full flex items-center gap-3 px-4 py-2 rounded-lg text-red-500 hover:bg-red-50"
+        >
+          <span class="material-icons">logout</span>
+          Logout
+        </a>
+      </div>
+    </aside>
+
+    <!-- MAIN CONTENT -->
+
+    <main class="flex-1 flex justify-center">
+      <main class="flex-1 flex justify-center">
+        <div class="w-full max-w-5xl p-8">
+          <!-- PAGE TITLE -->
+          <h2 class="text-2xl font-bold mb-8">Profile Settings</h2>
+
+          <!-- TABS -->
+          <div class="flex gap-8 border-b mb-8 text-sm">
+            <button
+              data-tab="general"
+              class="tab-btn pb-3 border-b-2 border-primary text-primary font-semibold"
+            >
+              General Info
+            </button>
+
+            <button
+              data-tab="company"
+              class="tab-btn pb-3 text-slate-500 hover:text-slate-700"
+            >
+              Company Details
+            </button>
+
+            <button
+              data-tab="jobs"
+              class="tab-btn pb-3 text-slate-500 hover:text-slate-700"
+            >
+              Active Jobs
+            </button>
+
+            <button
+              data-tab="preferences"
+              class="tab-btn pb-3 text-slate-500 hover:text-slate-700"
+            >
+              Preferences
+            </button>
+          </div>
+
+          <!-- GENERAL INFO -->
+          <div id="general" class="tab-content">
+            <div
+              class="bg-white rounded-2xl shadow border border-slate-200 overflow-hidden"
+            >
+              <div class="p-8">
+                <div
+                  class="flex flex-col md:flex-row items-center gap-6 mb-10 border-b pb-8"
+                >
+                  <img
+                    id="profile_preview"
+                    class="w-32 h-32 rounded-full object-cover border-4 border-white shadow"
+                    src="https://i.pravatar.cc/200"
+                  />
+
+                  <div>
+                    <h3 class="font-bold text-lg mb-1">Profile Photo</h3>
+                    <p class="text-sm text-slate-500 mb-4">
+                      Update your photo for a better presence among candidates.
+                    </p>
+
+                    <div class="flex gap-3">
+                      <button
+                        onclick="
+                          document.getElementById('profile_photo').click()
+                        "
+                        class="px-5 py-2 bg-primary text-white rounded-xl text-sm font-semibold"
+                      >
+                        Upload New Photo
+                      </button>
+                      <input
+                        type="file"
+                        id="profile_photo"
+                        accept="image/*"
+                        class="hidden"
+                      />
+
+                      <button
+                        class="px-5 py-2 bg-slate-100 rounded-xl text-sm font-semibold"
+                      >
+                        Remove
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div>
+                    <label class="text-sm font-semibold mb-1 block"
+                      >Full Name</label
+                    >
+                    <input
+                      id="full_name"
+                      value="{{ recruiter.full_name|default:'' }}"
+                      class="w-full rounded-xl border px-4 py-3"
+                    />
+                  </div>
+
+                  <div>
+                    <label class="text-sm font-semibold mb-1 block"
+                      >Work Email</label
+                    >
+                    <input
+                      id="work_email"
+                      value="{{ recruiter.work_email|default:'' }}"
+                      class="w-full rounded-xl border px-4 py-3"
+                    />
+                  </div>
+
+                  <div class="md:col-span-2">
+                    <label class="text-sm font-semibold mb-1 block"
+                      >Professional Bio</label
+                    >
+                    <textarea
+                      id="professional_bio"
+                      rows="4"
+                      class="w-full rounded-xl border px-4 py-3"
+                    ></textarea>
+                  </div>
+                </div>
+              </div>
+
+              <div class="flex justify-end bg-slate-50 px-8 py-6 border-t">
+                <button
+                  onclick="saveRecruiterProfile()"
+                  class="px-6 py-3 bg-primary text-white rounded-xl font-semibold"
+                >
+                  Save Profile
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- COMPANY DETAILS -->
+          <div id="company" class="tab-content hidden">
+            <div
+              class="bg-white rounded-2xl shadow border border-slate-200 p-8"
+            >
+              <h3 class="text-lg font-semibold mb-6">Company Details</h3>
+
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                  <label class="text-sm font-semibold block mb-1"
+                    >Company Name</label
+                  >
+                  <input
+                    id="company_name"
+                    value="{{ recruiter.company_name|default:'' }}"
+                    class="w-full border rounded-xl px-4 py-3"
+                  />
+                </div>
+
+                <div>
+                  <label class="text-sm font-semibold block mb-1"
+                    >Company Website</label
+                  >
+                  <input
+                    id="company_website"
+                    value="{{ recruiter.company_website|default:'' }}"
+                    class="w-full border rounded-xl px-4 py-3"
+                  />
+                </div>
+
+                <div>
+                  <label class="text-sm font-semibold block mb-1"
+                    >Industry</label
+                  >
+                  <select
+                    id="industry"
+                    class="w-full border rounded-xl px-4 py-3"
+                  >
+                    <option
+                      value="Technology"
+                      {%
+                      if
+                      recruiter.industry=""
+                      ="Technology"
+                      %}selected{%
+                      endif
+                      %}
+                    >
+                      Technology
+                    </option>
+
+                    <option
+                      value="Finance"
+                      {%
+                      if
+                      recruiter.industry=""
+                      ="Finance"
+                      %}selected{%
+                      endif
+                      %}
+                    >
+                      Finance
+                    </option>
+
+                    <option
+                      value="Healthcare"
+                      {%
+                      if
+                      recruiter.industry=""
+                      ="Healthcare"
+                      %}selected{%
+                      endif
+                      %}
+                    >
+                      Healthcare
+                    </option>
+                  </select>
+                </div>
+
+                <div>
+                  <label class="text-sm font-semibold block mb-1"
+                    >Company Size</label
+                  >
+                  <select
+                    id="company_size"
+                    class="w-full border rounded-xl px-4 py-3"
+                  >
+                    <option
+                      value="1-10 Employees"
+                      {%
+                      if
+                      recruiter.company_size=""
+                      ="1-10 Employees"
+                      %}selected{%
+                      endif
+                      %}
+                    >
+                      1-10 Employees
+                    </option>
+
+                    <option
+                      value="10-50 Employees"
+                      {%
+                      if
+                      recruiter.company_size=""
+                      ="10-50 Employees"
+                      %}selected{%
+                      endif
+                      %}
+                    >
+                      10-50 Employees
+                    </option>
+
+                    <option
+                      value="50-200 Employees"
+                      {%
+                      if
+                      recruiter.company_size=""
+                      ="50-200 Employees"
+                      %}selected{%
+                      endif
+                      %}
+                    >
+                      50-200 Employees
+                    </option>
+                  </select>
+                </div>
+
+                <div class="md:col-span-2">
+                  <label class="text-sm font-semibold block mb-1"
+                    >Company Description</label
+                  >
+                  <textarea
+                    id="company_description"
+                    rows="4"
+                    class="w-full border rounded-xl px-4 py-3"
+                  ></textarea>
+                </div>
+              </div>
+
+              <div class="flex justify-end mt-6">
+                <button
+                  onclick="saveRecruiterProfile()"
+                  class="bg-primary text-white px-6 py-3 rounded-xl"
+                >
+                  Save Company Info
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- ACTIVE JOBS -->
+          <div id="jobs" class="tab-content hidden">
+            <div class="bg-white rounded-2xl shadow border overflow-hidden">
+              <div class="p-6 border-b flex justify-between items-center">
+                <h3 class="text-lg font-semibold">Active Jobs</h3>
+
+                <a
+                  href="{% url 'job_create' %}"
+                  class="bg-primary text-white px-4 py-2 rounded-lg"
+                >
+                  Create Job
+                </a>
+              </div>
+
+              <table class="w-full text-left">
+                <thead class="bg-slate-50">
+                  <tr>
+                    <th class="p-4">Job Title</th>
+                    <th class="p-4">Location</th>
+                    <th class="p-4">Applicants</th>
+                    <th class="p-4">Status</th>
+                  </tr>
+                </thead>
+
+                <tbody>
+                  <tr class="border-t">
+                    <td class="p-4">Frontend Developer</td>
+                    <td class="p-4">Remote</td>
+                    <td class="p-4">34</td>
+                    <td class="p-4 text-green-600">Active</td>
+                  </tr>
+
+                  <tr class="border-t">
+                    <td class="p-4">Backend Engineer</td>
+                    <td class="p-4">New York</td>
+                    <td class="p-4">18</td>
+                    <td class="p-4 text-yellow-600">Paused</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- PREFERENCES -->
+          <div id="preferences" class="tab-content hidden">
+            <div class="bg-white rounded-2xl shadow border p-8">
+              <h3 class="text-lg font-semibold mb-6">Preferences</h3>
+
+              <div class="space-y-6">
+                <div class="flex justify-between">
+                  <span>Email Notifications</span>
+                  <input type="checkbox" checked />
+                </div>
+
+                <div class="flex justify-between">
+                  <span>AI Candidate Recommendations</span>
+                  <input type="checkbox" checked />
+                </div>
+
+                <div class="flex justify-between">
+                  <span>Auto Reject Low Match Candidates</span>
+                  <input type="checkbox" />
+                </div>
+              </div>
+
+              <div class="flex justify-end mt-8">
+                <button class="bg-primary text-white px-6 py-3 rounded-xl">
+                  Save Preferences
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+    </main>
+    <script>
+      window.addEventListener("DOMContentLoaded", () => {
+        const savedPhoto = localStorage.getItem("recruiter_photo");
+
+        if (savedPhoto) {
+          document.getElementById("profile_preview").src = savedPhoto;
+        }
+        const bio = localStorage.getItem("professional_bio");
+        const companyDesc = localStorage.getItem("company_description");
+
+        if (bio) {
+          document.getElementById("professional_bio").value = bio;
+        }
+
+        if (companyDesc) {
+          document.getElementById("company_description").value = companyDesc;
+        }
+      });
+
+      // SAVE WHEN USER TYPES
+      document
+        .getElementById("professional_bio")
+        .addEventListener("input", function () {
+          localStorage.setItem("professional_bio", this.value);
+        });
+
+      document
+        .getElementById("company_description")
+        .addEventListener("input", function () {
+          localStorage.setItem("company_description", this.value);
+        });
+
+      const tabs = document.querySelectorAll(".tab-btn");
+      const contents = document.querySelectorAll(".tab-content");
+
+      tabs.forEach((tab) => {
+        tab.addEventListener("click", () => {
+          // Remove active style from all tabs
+          tabs.forEach((t) => {
+            t.classList.remove(
+              "border-b-2",
+              "border-primary",
+              "text-primary",
+              "font-semibold",
+            );
+            t.classList.add("text-slate-500");
+          });
+
+          // Add active style to clicked tab
+          tab.classList.add(
+            "border-b-2",
+            "border-primary",
+            "text-primary",
+            "font-semibold",
+          );
+          tab.classList.remove("text-slate-500");
+
+          // Hide all tab contents
+          contents.forEach((c) => {
+            c.classList.add("hidden");
+          });
+
+          // Show selected tab
+          document.getElementById(tab.dataset.tab).classList.remove("hidden");
+        });
+      });
+
+      async function saveRecruiterProfile() {
+        const data = {
+          full_name: document.getElementById("full_name").value,
+          work_email: document.getElementById("work_email").value,
+          company_name: document.getElementById("company_name").value,
+          company_website: document.getElementById("company_website").value,
+          industry: document.getElementById("industry").value,
+          company_size: document.getElementById("company_size").value,
+        };
+
+        await fetch("/recruiter/save-profile/", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "X-CSRFToken": getCookie("csrftoken"),
+          },
+          body: JSON.stringify(data),
+        });
+
+        alert("Profile Saved Successfully");
+      }
+
+      function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== "") {
+          const cookies = document.cookie.split(";");
+          for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.substring(0, name.length + 1) === name + "=") {
+              cookieValue = decodeURIComponent(
+                cookie.substring(name.length + 1),
+              );
+              break;
+            }
+          }
+        }
+        return cookieValue;
+      }
+
+      const photoInput = document.getElementById("profile_photo");
+
+      photoInput.addEventListener("change", function () {
+        const file = this.files[0];
+
+        const reader = new FileReader();
+
+        reader.onload = function (e) {
+          const imageData = e.target.result;
+
+          // save image in browser
+          localStorage.setItem("recruiter_photo", imageData);
+
+          // show image
+          document.getElementById("profile_preview").src = imageData;
+        };
+
+        reader.readAsDataURL(file);
+      });
+    </script>
+  </body>
+</html>
